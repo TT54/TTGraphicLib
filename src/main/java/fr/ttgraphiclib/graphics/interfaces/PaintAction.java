@@ -1,14 +1,13 @@
-package fr.ttgraphiclib.graphics;
+package fr.ttgraphiclib.graphics.interfaces;
 
-import java.awt.*;
+import fr.ttgraphiclib.utils.OffsetGraphics;
 
 public interface PaintAction{
 
     /**
-     *
      * @param graphic
      * @return boolean used to indicate if this code should be executed during the next graphics paintings.
      */
-    boolean doAction(Graphics graphic);
+    boolean doAction(OffsetGraphics graphic);
 
 }

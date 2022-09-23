@@ -1,11 +1,18 @@
 package fr.ttgraphiclib.graphics;
 
+import fr.ttgraphiclib.GraphicManager;
+import fr.ttgraphiclib.graphics.events.GraphicRepaintEvent;
+import fr.ttgraphiclib.graphics.events.listener.GraphicsListener;
+import fr.ttgraphiclib.graphics.interfaces.PaintAction;
 import fr.ttgraphiclib.graphics.nodes.GraphicNode;
+import fr.ttgraphiclib.utils.OffsetGraphics;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GraphicPanel extends JPanel {
@@ -13,18 +20,30 @@ public class GraphicPanel extends JPanel {
 
     private final List<GraphicNode> nodes = new ArrayList<>();
 
+
+    private int topX = 0;
+    private int topY = 0;
+
     @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    protected void paintComponent(Graphics graphics) {
+        super.paintComponent(graphics);
+        OffsetGraphics g = new OffsetGraphics(graphics, topX, topY);
+
+
+        GraphicRepaintEvent event = new GraphicRepaintEvent(GraphicManager.getFrame(), this, g, topX, topY);
+        GraphicsListener.playPanelRepaintEvent(event);
+        if (event.isCanceled())
+            return;
+
 
         List<Integer> priorities = this.actions.keySet().stream().sorted().collect(Collectors.toList());
-        for(int priority : priorities){
+        for (int priority : priorities) {
 
             List<PaintAction> toRemove = new ArrayList<>();
             boolean removeNeeded = false;
-            for(PaintAction action : this.actions.get(priority)){
+            for (PaintAction action : this.actions.get(priority)) {
                 boolean shouldContinue = action.doAction(g);
-                if(!shouldContinue) {
+                if (!shouldContinue) {
                     removeNeeded = true;
                     toRemove.add(action);
                 }
@@ -41,14 +60,19 @@ public class GraphicPanel extends JPanel {
         this.drawNodes(g);
     }
 
-    private void drawNodes(Graphics g) {
-        for(GraphicNode node : this.nodes){
-            node.draw(g, (int) node.getX(), (int) node.getY(), (int) node.getSize());
+    private void drawNodes(OffsetGraphics g) {
+        for (GraphicNode node : this.nodes) {
+            node.draw(g, (int) node.getX() - topX, (int) node.getY() - topY, (int) node.getSize());
         }
     }
 
+    public void translatePanel(int x, int y) {
+        this.topX += x;
+        this.topY += y;
+    }
 
-    public GraphicPanel addPainting(PaintAction action, int priority){
+
+    public GraphicPanel addPainting(PaintAction action, int priority) {
         List<PaintAction> list = this.actions.getOrDefault(priority, new ArrayList<>());
         list.add(action);
         this.actions.put(priority, list);
@@ -77,6 +101,11 @@ public class GraphicPanel extends JPanel {
         }
     }
 
+    public int getTopX() {
+        return topX;
+    }
 
-
+    public int getTopY() {
+        return topY;
+    }
 }

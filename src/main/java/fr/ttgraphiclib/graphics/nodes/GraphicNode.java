@@ -1,8 +1,10 @@
 package fr.ttgraphiclib.graphics.nodes;
 
 import fr.ttgraphiclib.graphics.GraphicPanel;
-
-import java.awt.*;
+import fr.ttgraphiclib.graphics.events.NodeMoveEvent;
+import fr.ttgraphiclib.graphics.events.listener.GraphicsListener;
+import fr.ttgraphiclib.graphics.interfaces.MoveAction;
+import fr.ttgraphiclib.utils.OffsetGraphics;
 
 public abstract class GraphicNode {
 
@@ -16,6 +18,8 @@ public abstract class GraphicNode {
     private double accelerationX;
     private double accelerationY;
 
+    private MoveAction<NodeMoveEvent> action;
+
 
     public GraphicNode(GraphicPanel panel, double x, double y) {
         this.x = x;
@@ -23,7 +27,9 @@ public abstract class GraphicNode {
         this.panel = panel;
 
         this.panel.addNode(this);
-    }public GraphicNode(GraphicPanel panel, double x, double y, double size) {
+    }
+
+    public GraphicNode(GraphicPanel panel, double x, double y, double size) {
         this.x = x;
         this.y = y;
         this.size = size;
@@ -32,7 +38,7 @@ public abstract class GraphicNode {
         this.panel.addNode(this);
     }
 
-    public abstract void draw(Graphics g, int x, int y, int size);
+    public abstract void draw(OffsetGraphics g, int x, int y, int size);
 
     public final void setX(double x) {
         this.x = x;
@@ -69,12 +75,28 @@ public abstract class GraphicNode {
     }
 
 
-    public final void move(){
+    public final void move() {
         this.speedX += this.accelerationX;
         this.speedY += this.accelerationY;
 
-        this.x += this.speedX;
-        this.y += this.speedY;
+
+        double simX = this.x + this.speedX;
+        double simY = this.y + this.speedY;
+        NodeMoveEvent event = new NodeMoveEvent(simX, simY, this, this.panel);
+
+        if (this.action != null)
+            this.action.onMove(event);
+        GraphicsListener.playNodeMoveEvent(event);
+
+        if (!event.isCanceled()) {
+            this.x = event.getNextPosX();
+            this.y = event.getNextPosY();
+        } else {
+            this.x += this.speedX;
+            this.y += this.speedY;
+        }
+
+
     }
 
     public GraphicPanel getPanel() {
@@ -111,5 +133,9 @@ public abstract class GraphicNode {
 
     public void setSize(double size) {
         this.size = size;
+    }
+
+    public void setMoveAction(MoveAction<NodeMoveEvent> action) {
+        this.action = action;
     }
 }

@@ -1,6 +1,7 @@
 package fr.ttgraphiclib.thread;
 
 import fr.ttgraphiclib.graphics.GraphicPanel;
+import fr.ttgraphiclib.graphics.events.listener.TTMouseListener;
 import fr.ttgraphiclib.graphics.nodes.GraphicNode;
 
 import javax.swing.*;
@@ -31,6 +32,7 @@ public class Frame extends JFrame {
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setSize(this.width, this.height);
         this.setLocationRelativeTo(null);
+        this.addMouseListener(new TTMouseListener());
         this.setResizable(resizable);
     }
 
