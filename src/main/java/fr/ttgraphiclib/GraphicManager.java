@@ -2,7 +2,7 @@ package fr.ttgraphiclib;
 
 import fr.ttgraphiclib.graphics.GraphicPanel;
 import fr.ttgraphiclib.graphics.events.listener.GraphicsListener;
-import fr.ttgraphiclib.graphics.events.listener.TTMouseListener;
+import fr.ttgraphiclib.graphics.events.listener.UserListener;
 import fr.ttgraphiclib.thread.Frame;
 
 public class GraphicManager {
@@ -35,7 +35,15 @@ public class GraphicManager {
         GraphicsListener.registerListener(listener);
     }
 
-    public static void registerMouseListener(TTMouseListener listener) {
-        TTMouseListener.registerListener(listener);
+    public static void registerMouseListener(UserListener listener) {
+        UserListener.registerListener(listener);
+    }
+
+    public static void freezeNodes(boolean freeze) {
+        frame.setNodesEnabled(freeze);
+    }
+
+    public static boolean areNodesFrozen() {
+        return frame.areNodesEnabled();
     }
 }

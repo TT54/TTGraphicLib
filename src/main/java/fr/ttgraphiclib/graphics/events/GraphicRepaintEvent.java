@@ -2,22 +2,22 @@ package fr.ttgraphiclib.graphics.events;
 
 import fr.ttgraphiclib.graphics.GraphicPanel;
 import fr.ttgraphiclib.thread.Frame;
-import fr.ttgraphiclib.utils.OffsetGraphics;
+import fr.ttgraphiclib.utils.TTGraphics;
 
 public class GraphicRepaintEvent extends Event {
 
-    private final OffsetGraphics graphics;
+    private final TTGraphics graphics;
     private final int topX;
     private final int topY;
 
-    public GraphicRepaintEvent(final Frame frame, final GraphicPanel panel, final OffsetGraphics graphics, final int topX, final int topY) {
+    public GraphicRepaintEvent(final Frame frame, final GraphicPanel panel, final TTGraphics graphics, final int topX, final int topY) {
         super(frame, panel);
         this.graphics = graphics;
         this.topX = topX;
         this.topY = topY;
     }
 
-    public OffsetGraphics getGraphics() {
+    public TTGraphics getGraphics() {
         return graphics;
     }
 

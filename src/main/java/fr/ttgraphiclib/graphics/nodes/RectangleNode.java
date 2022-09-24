@@ -1,7 +1,7 @@
 package fr.ttgraphiclib.graphics.nodes;
 
 import fr.ttgraphiclib.graphics.GraphicPanel;
-import fr.ttgraphiclib.utils.OffsetGraphics;
+import fr.ttgraphiclib.utils.TTGraphics;
 
 import java.awt.*;
 
@@ -34,7 +34,7 @@ public class RectangleNode extends GraphicNode {
     }
 
     @Override
-    public void draw(OffsetGraphics g, int x, int y, int size) {
+    public void draw(TTGraphics g, int x, int y, int size) {
         Color ancient = g.getColor();
         g.setColor(color);
         g.fillRect(x, y, (int) (size * baseWidth), (int) (size * baseHeight));

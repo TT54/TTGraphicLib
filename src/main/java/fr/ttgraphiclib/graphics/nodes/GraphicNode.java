@@ -4,7 +4,7 @@ import fr.ttgraphiclib.graphics.GraphicPanel;
 import fr.ttgraphiclib.graphics.events.NodeMoveEvent;
 import fr.ttgraphiclib.graphics.events.listener.GraphicsListener;
 import fr.ttgraphiclib.graphics.interfaces.MoveAction;
-import fr.ttgraphiclib.utils.OffsetGraphics;
+import fr.ttgraphiclib.utils.TTGraphics;
 
 public abstract class GraphicNode {
 
@@ -38,7 +38,7 @@ public abstract class GraphicNode {
         this.panel.addNode(this);
     }
 
-    public abstract void draw(OffsetGraphics g, int x, int y, int size);
+    public abstract void draw(TTGraphics g, int x, int y, int size);
 
     public final void setX(double x) {
         this.x = x;
@@ -95,8 +95,6 @@ public abstract class GraphicNode {
             this.x += this.speedX;
             this.y += this.speedY;
         }
-
-
     }
 
     public GraphicPanel getPanel() {

@@ -1,7 +1,7 @@
 package fr.ttgraphiclib.thread;
 
 import fr.ttgraphiclib.graphics.GraphicPanel;
-import fr.ttgraphiclib.graphics.events.listener.TTMouseListener;
+import fr.ttgraphiclib.graphics.events.listener.UserListener;
 import fr.ttgraphiclib.graphics.nodes.GraphicNode;
 
 import javax.swing.*;
@@ -19,6 +19,8 @@ public class Frame extends JFrame {
 
     private GraphicPanel panel;
 
+    private boolean freeze = false;
+
 
     private long lastFrame = 0;
 
@@ -32,7 +34,11 @@ public class Frame extends JFrame {
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setSize(this.width, this.height);
         this.setLocationRelativeTo(null);
-        this.addMouseListener(new TTMouseListener());
+
+        UserListener listener = new UserListener();
+        this.addMouseListener(listener);
+        this.addMouseWheelListener(listener);
+        this.addKeyListener(listener);
         this.setResizable(resizable);
     }
 
@@ -74,17 +80,27 @@ public class Frame extends JFrame {
     }
 
     private void drawContent() {
-        while(true){
-            panel.getNodes().forEach(GraphicNode::move);
+        while(true) {
+            if (!this.freeze) {
+                panel.getNodes().forEach(GraphicNode::move);
+            }
             this.panel.repaint();
-            try{
+            try {
                 Thread.sleep(Math.max(0, 1000 / this.maxFPS - (System.currentTimeMillis() - lastFrame)));
                 fps += (int) (1000 / (System.currentTimeMillis() - lastFrame));
                 fps /= 2;
                 lastFrame = System.currentTimeMillis();
-            }catch (InterruptedException e){
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void setNodesEnabled(boolean freeze) {
+        this.freeze = freeze;
+    }
+
+    public boolean areNodesEnabled() {
+        return this.freeze;
     }
 }

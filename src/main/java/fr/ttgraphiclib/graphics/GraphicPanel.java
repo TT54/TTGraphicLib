@@ -5,7 +5,7 @@ import fr.ttgraphiclib.graphics.events.GraphicRepaintEvent;
 import fr.ttgraphiclib.graphics.events.listener.GraphicsListener;
 import fr.ttgraphiclib.graphics.interfaces.PaintAction;
 import fr.ttgraphiclib.graphics.nodes.GraphicNode;
-import fr.ttgraphiclib.utils.OffsetGraphics;
+import fr.ttgraphiclib.utils.TTGraphics;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,10 +24,12 @@ public class GraphicPanel extends JPanel {
     private int topX = 0;
     private int topY = 0;
 
+    private double zoom = 1;
+
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
-        OffsetGraphics g = new OffsetGraphics(graphics, topX, topY);
+        TTGraphics g = new TTGraphics(graphics, topX, topY, zoom, this);
 
 
         GraphicRepaintEvent event = new GraphicRepaintEvent(GraphicManager.getFrame(), this, g, topX, topY);
@@ -60,9 +62,9 @@ public class GraphicPanel extends JPanel {
         this.drawNodes(g);
     }
 
-    private void drawNodes(OffsetGraphics g) {
+    private void drawNodes(TTGraphics g) {
         for (GraphicNode node : this.nodes) {
-            node.draw(g, (int) node.getX() - topX, (int) node.getY() - topY, (int) node.getSize());
+            node.draw(g, (int) node.getX(), (int) node.getY(), (int) node.getSize());
         }
     }
 
@@ -80,25 +82,12 @@ public class GraphicPanel extends JPanel {
         return this;
     }
 
-    public final void addNode(GraphicNode node){
+    public final void addNode(GraphicNode node) {
         this.nodes.add(node);
     }
 
-    public List<GraphicNode> getNodes(){
+    public List<GraphicNode> getNodes() {
         return this.nodes;
-    }
-
-
-
-    public static class DebugPanel extends GraphicPanel {
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            g.drawString("DEBUG MODE", 15, 15);
-            g.setColor(Color.RED);
-            g.fillRect(150, 150, 100, 20);
-        }
     }
 
     public int getTopX() {
@@ -107,5 +96,32 @@ public class GraphicPanel extends JPanel {
 
     public int getTopY() {
         return topY;
+    }
+
+    public double getZoom() {
+        return zoom;
+    }
+
+    public void setZoom(double zoom) {
+        if (zoom > 0)
+            this.zoom = zoom;
+    }
+
+    public void addZoom(double zoom) {
+        if (this.zoom + zoom > 0)
+            this.zoom += zoom;
+    }
+
+
+    public static class DebugPanel extends GraphicPanel {
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.setColor(Color.RED);
+            g.fillRect(0, 0, 90, 20);
+            g.setColor(Color.BLACK);
+            g.drawString("DEBUG MODE", 5, 15);
+        }
     }
 }
