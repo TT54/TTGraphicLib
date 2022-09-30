@@ -3,11 +3,14 @@ package fr.ttgraphiclib.utils;
 import fr.ttgraphiclib.graphics.GraphicPanel;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 
 public class TTGraphics {
 
-    private final Graphics g;
+    private final Graphics2D g;
 
     private final int topX;
     private final int topY;
@@ -17,7 +20,7 @@ public class TTGraphics {
     private final int centerX;
     private final int centerY;
 
-    public TTGraphics(Graphics g, int topX, int topY, double zoom, GraphicPanel panel) {
+    public TTGraphics(Graphics2D g, int topX, int topY, double zoom, GraphicPanel panel) {
         this.g = g;
         this.topX = topX;
         this.topY = topY;
@@ -60,6 +63,16 @@ public class TTGraphics {
         return false;
     }
 
+    public boolean drawRotatedImage(Image image, int x, int y, int width, int height, ImageObserver observer, double rotateAngle) {
+        if (image != null) {
+            g.rotate(rotateAngle);
+            boolean ret = g.drawImage(image, (int) (zoom * (x - topX)) + centerX, (int) (zoom * (y - topY)) + centerY, (int) (zoom * width), (int) (zoom * height), observer);
+            g.rotate( -rotateAngle);
+            return ret;
+        }
+        return false;
+    }
+
     public boolean drawImage(Image image, int x, int y, int width, int height, int imageTopX, int imageTopY, int imageWidth, int imageHeight, ImageObserver observer) {
         if (image != null) {
             int d2x = x + width;
@@ -70,6 +83,19 @@ public class TTGraphics {
             return g.drawImage(image, (int) (zoom * (x - topX)) + centerX, (int) (zoom * (y - topY)) + centerY, (int) (zoom * (d2x - topX)) + centerX, (int) (zoom * (d2y - topY)) + centerY, imageTopX, imageTopY, s2x, s2y, observer);
         }
         return false;
+    }
+
+    public void drawRotatedImage(BufferedImage image, int x, int y, int width, int height, double rotation){
+        if(image != null) {
+            double rotationRequired = Math.toRadians(45);
+            double locationX = image.getWidth() / 2d;
+            double locationY = image.getHeight() / 2d;
+            AffineTransform tx = AffineTransform.getRotateInstance(rotationRequired, locationX, locationY);
+            AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+
+//Drawing the rotated image at the required drawing locations
+            g.drawImage(op.filter(image, null), (int) (zoom * (x - topX)) + centerX, (int) (zoom * (y - topY)) + centerY, (int) (zoom * width), (int) (zoom * height), null);
+        }
     }
 
 
@@ -121,7 +147,7 @@ public class TTGraphics {
         this.g.setColor(color);
     }
 
-    public Graphics getGraphics() {
+    public Graphics2D getGraphics() {
         return this.g;
     }
 }

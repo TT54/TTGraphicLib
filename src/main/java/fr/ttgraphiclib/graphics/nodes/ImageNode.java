@@ -5,15 +5,16 @@ import fr.ttgraphiclib.utils.TTGraphics;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
 public class ImageNode extends GraphicNode {
 
-    private Image image;
-    private double width = 0;
-    private double height = 0;
+    protected BufferedImage image;
+    protected double width = 0;
+    protected double height = 0;
 
     public ImageNode(GraphicPanel panel, double x, double y, double width, double height, URL imageURL) {
         super(panel, x, y);

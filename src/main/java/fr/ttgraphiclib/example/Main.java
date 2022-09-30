@@ -8,6 +8,7 @@ import fr.ttgraphiclib.graphics.events.listener.GraphicsListener;
 import fr.ttgraphiclib.graphics.nodes.ImageNode;
 import fr.ttgraphiclib.graphics.nodes.PolygonNode;
 import fr.ttgraphiclib.graphics.nodes.RectangleNode;
+import fr.ttgraphiclib.graphics.nodes.RotatedImageNode;
 import fr.ttgraphiclib.thread.Frame;
 
 import java.awt.*;
@@ -60,7 +61,11 @@ public class Main extends GraphicsListener {
         r.setColor(Color.BLACK);
 
         try {
-            ImageNode imageNode = new ImageNode(panel, 25, 250, 50, 50, new URL("https://static.wikia.nocookie.net/hypixel-skyblock/images/e/e6/Site-logo.png/revision/latest?cb=20220430221340"));
+            new ImageNode(panel, 25, 250, 50, 50, new URL("https://static.wikia.nocookie.net/hypixel-skyblock/images/e/e6/Site-logo.png/revision/latest?cb=20220430221340"));
+            RotatedImageNode img = new RotatedImageNode(panel, 0, -250, 50, 50, new URL("https://static.wikia.nocookie.net/hypixel-skyblock/images/e/e6/Site-logo.png/revision/latest?cb=20220430221340"), 1d);
+            img.setMoveAction(event -> {
+                img.accelerate(0.01, 0.01);
+            });
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

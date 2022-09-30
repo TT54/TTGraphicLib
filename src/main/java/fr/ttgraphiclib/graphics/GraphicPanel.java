@@ -9,10 +9,8 @@ import fr.ttgraphiclib.utils.TTGraphics;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GraphicPanel extends JPanel {
@@ -29,42 +27,48 @@ public class GraphicPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
-        TTGraphics g = new TTGraphics(graphics, topX, topY, zoom, this);
+        if(graphics instanceof Graphics2D) {
+            TTGraphics g = new TTGraphics((Graphics2D) graphics, topX, topY, zoom, this);
 
 
-        GraphicRepaintEvent event = new GraphicRepaintEvent(GraphicManager.getFrame(), this, g, topX, topY);
-        GraphicsListener.playPanelRepaintEvent(event);
-        if (event.isCanceled())
-            return;
+            GraphicRepaintEvent event = new GraphicRepaintEvent(GraphicManager.getFrame(), this, g, topX, topY);
+            GraphicsListener.playPanelRepaintEvent(event);
+            if (event.isCanceled())
+                return;
 
 
-        List<Integer> priorities = this.actions.keySet().stream().sorted().collect(Collectors.toList());
-        for (int priority : priorities) {
+            List<Integer> priorities = this.actions.keySet().stream().sorted().collect(Collectors.toList());
+            for (int priority : priorities) {
 
-            List<PaintAction> toRemove = new ArrayList<>();
-            boolean removeNeeded = false;
-            for (PaintAction action : this.actions.get(priority)) {
-                boolean shouldContinue = action.doAction(g);
-                if (!shouldContinue) {
-                    removeNeeded = true;
-                    toRemove.add(action);
+                List<PaintAction> toRemove = new ArrayList<>();
+                boolean removeNeeded = false;
+                for (PaintAction action : this.actions.get(priority)) {
+                    boolean shouldContinue = action.doAction(g);
+                    if (!shouldContinue) {
+                        removeNeeded = true;
+                        toRemove.add(action);
+                    }
+                }
+
+                if (removeNeeded) {
+                    for (PaintAction action : toRemove) {
+                        this.actions.get(priority).remove(action);
+                    }
                 }
             }
 
-            if(removeNeeded) {
-                for (PaintAction action : toRemove) {
-                    this.actions.get(priority).remove(action);
-                }
-            }
+
+            this.drawNodes(g);
         }
-
-
-        this.drawNodes(g);
     }
 
     private void drawNodes(TTGraphics g) {
-        for (GraphicNode node : this.nodes) {
-            node.draw(g, (int) node.getX(), (int) node.getY(), (int) node.getSize());
+        try {
+            for (GraphicNode node : this.nodes) {
+                node.draw(g, (int) node.getX(), (int) node.getY(), (int) node.getSize());
+            }
+        } catch (ConcurrentModificationException e){
+            System.out.println("Concurrent Modification Exception");
         }
     }
 
