@@ -5,10 +5,7 @@ import fr.ttgraphiclib.graphics.GraphicPanel;
 import fr.ttgraphiclib.graphics.events.GraphicRepaintEvent;
 import fr.ttgraphiclib.graphics.events.NodeMoveEvent;
 import fr.ttgraphiclib.graphics.events.listener.GraphicsListener;
-import fr.ttgraphiclib.graphics.nodes.ImageNode;
-import fr.ttgraphiclib.graphics.nodes.PolygonNode;
-import fr.ttgraphiclib.graphics.nodes.RectangleNode;
-import fr.ttgraphiclib.graphics.nodes.RotatedImageNode;
+import fr.ttgraphiclib.graphics.nodes.*;
 import fr.ttgraphiclib.thread.Frame;
 
 import java.awt.*;
@@ -17,60 +14,71 @@ import java.net.URL;
 
 public class Main extends GraphicsListener {
 
+    private static final boolean TEST = false;
+
     public static void main(String[] args) {
-        long time = System.currentTimeMillis();
+        if (TEST) {
+            long time = System.currentTimeMillis();
 
-        GraphicPanel panel = new GraphicPanel.DebugPanel().addPainting(graphic -> {
-            graphic.drawString("COUCOCU", 200, 50);
-            graphic.drawString("FPS : " + GraphicManager.getFrame().getFps(), 200, 100);
+            GraphicPanel panel = new GraphicPanel.DebugPanel().addPainting(graphic -> {
+                graphic.drawString("COUCOCU", 200, 50);
+                graphic.drawString("FPS : " + GraphicManager.getFrame().getFps(), 200, 100);
+                return true;
+            }, 1);
 
-            if (time + 3 * 1000 < System.currentTimeMillis()) {
-                GraphicManager.getFrame().setMaxFPS(60);
-            }
-
-            return true;
-        }, 1);
-
-        RectangleNode node = new RectangleNode(panel, 0, 0);
-        node.accelerate(1, 0);
-        node.setMoveAction(event -> {
-            if (event.getNextPosX() > 600 && event.getNode().getAccelerationX() > 0) {
-                event.getNode().setAccelerationX(-1);
-            } else if (event.getNextPosX() < 900 && event.getNode().getAccelerationX() < 0) {
-                event.getNode().setAccelerationX(1);
-            }
-        });
-
-
-        GraphicManager.enable(new Frame("Test"), panel);
-        GraphicManager.registerGraphicListener(new Main());
-        GraphicManager.registerMouseListener(new ExampleListener());
-
-
-        RectangleNode rect = new RectangleNode(panel, 0, 50, 70, 50);
-        rect.accelerate(1, 0);
-        rect.setMoveAction(event -> {
-            if (event.getNextPosX() > 400 && event.getNode().getAccelerationX() > 0) {
-                event.getNode().setAccelerationX(-1);
-            } else if (event.getNextPosX() < 600 && event.getNode().getAccelerationX() < 0) {
-                event.getNode().setAccelerationX(1);
-            }
-        });
-
-        RectangleNode r = new RectangleNode(panel, -50, -50, 100, 100);
-        r.setColor(Color.BLACK);
-
-        try {
-            new ImageNode(panel, 25, 250, 50, 50, new URL("https://static.wikia.nocookie.net/hypixel-skyblock/images/e/e6/Site-logo.png/revision/latest?cb=20220430221340"));
-            RotatedImageNode img = new RotatedImageNode(panel, 0, -250, 50, 50, new URL("https://static.wikia.nocookie.net/hypixel-skyblock/images/e/e6/Site-logo.png/revision/latest?cb=20220430221340"), 1d);
-            img.setMoveAction(event -> {
-                img.accelerate(0.01, 0.01);
+            RectangleNode node = new RectangleNode(panel, 0, 0);
+            node.accelerate(1, 0);
+            node.setMoveAction(event -> {
+                if (event.getNextPosX() > 600 && event.getNode().getAccelerationX() > 0) {
+                    event.getNode().setAccelerationX(-1);
+                } else if (event.getNextPosX() < 900 && event.getNode().getAccelerationX() < 0) {
+                    event.getNode().setAccelerationX(1);
+                }
             });
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
 
-        PolygonNode polygonNode = new PolygonNode(panel, 200, 250, new double[]{-10d, 10d, 0}, new double[]{0, 0, 10});
+            GraphicManager.setMaxFPS(60);
+            GraphicManager.setMaxMovePerSecond(45);
+            GraphicManager.enable(new Frame("Test"), panel);
+            GraphicManager.registerGraphicListener(new Main());
+            GraphicManager.registerMouseListener(new ExampleListener());
+
+
+            RectangleNode rect = new RectangleNode(panel, 0, 50, 70, 50);
+            rect.accelerate(1, 0);
+            rect.setMoveAction(event -> {
+                if (event.getNextPosX() > 400 && event.getNode().getAccelerationX() > 0) {
+                    event.getNode().setAccelerationX(-1);
+                } else if (event.getNextPosX() < 600 && event.getNode().getAccelerationX() < 0) {
+                    event.getNode().setAccelerationX(1);
+                }
+            });
+
+            RectangleNode r = new RectangleNode(panel, -50, -50, 100, 100);
+            r.setColor(Color.BLACK);
+
+
+            PolygonNode polygonNode = new PolygonNode(panel, 100, 50, new double[]{-10d, 10d, 0}, new double[]{0, 0, 10});
+
+            PolyNode polyNode = new PolyNode(panel, 10, 10, polygonNode, r);
+            polyNode.setAccelerationX(0.1d);
+            polyNode.setMoveAction(event -> {
+                if (event.getNextPosX() > 400) {
+                    event.getNode().setAccelerationX(-.2d);
+                } else {
+                    event.getNode().setAccelerationX(.2d);
+                }
+            });
+
+            try {
+                new ImageNode(panel, 25, 250, 50, 50, new URL("https://static.wikia.nocookie.net/hypixel-skyblock/images/e/e6/Site-logo.png/revision/latest?cb=20220430221340"));
+                RotatedImageNode img = new RotatedImageNode(panel, 0, -250, 50, 50, new URL("https://static.wikia.nocookie.net/hypixel-skyblock/images/e/e6/Site-logo.png/revision/latest?cb=20220430221340"), 1d);
+                img.setMoveAction(event -> {
+                    img.accelerate(0.01, 0.01);
+                });
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override

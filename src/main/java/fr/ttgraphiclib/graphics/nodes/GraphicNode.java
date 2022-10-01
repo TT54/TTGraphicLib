@@ -75,7 +75,7 @@ public abstract class GraphicNode {
     }
 
 
-    public final void move() {
+    public void move() {
         this.speedX += this.accelerationX;
         this.speedY += this.accelerationY;
 

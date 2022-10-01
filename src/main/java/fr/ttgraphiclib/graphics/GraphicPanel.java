@@ -9,8 +9,8 @@ import fr.ttgraphiclib.utils.TTGraphics;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GraphicPanel extends JPanel {
@@ -92,6 +92,10 @@ public class GraphicPanel extends JPanel {
 
     public List<GraphicNode> getNodes() {
         return this.nodes;
+    }
+
+    public void removeNode(GraphicNode graphicNode) {
+        this.nodes.remove(graphicNode);
     }
 
     public int getTopX() {

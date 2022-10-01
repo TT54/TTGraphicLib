@@ -15,7 +15,9 @@ public class Frame extends JFrame {
     private final boolean resizable;
 
     private int maxFPS = 30;
+    private int maxMps = 30;
     private int fps = 0;
+    private int tps = 0;
 
     private GraphicPanel panel;
 
@@ -23,6 +25,7 @@ public class Frame extends JFrame {
 
 
     private long lastFrame = 0;
+    private long lastTick = 0;
 
     public Frame(String title, int width, int height, boolean resizable) throws HeadlessException {
         this.title = title;
@@ -71,6 +74,18 @@ public class Frame extends JFrame {
         return fps;
     }
 
+    public int getMaxMps() {
+        return maxMps;
+    }
+
+    public void setMaxMPS(int maxMps) {
+        this.maxMps = maxMps;
+    }
+
+    public int getTps() {
+        return tps;
+    }
+
     public JPanel getPanel() {
         return panel;
     }
@@ -80,10 +95,26 @@ public class Frame extends JFrame {
     }
 
     private void drawContent() {
-        while(true) {
-            if (!this.freeze) {
-                panel.getNodes().forEach(GraphicNode::move);
+        //Calcul gestion
+        new Thread(() -> {
+            while (true) {
+                if (!this.freeze) {
+                    panel.getNodes().forEach(GraphicNode::move);
+                }
+                try {
+                    Thread.sleep(Math.max(0, 1000 / this.maxMps - (System.currentTimeMillis() - lastTick)));
+                    tps += (int) (1000 / (System.currentTimeMillis() - lastTick + 1));
+                    tps /= 2;
+                    lastTick = System.currentTimeMillis();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
+        }).start();
+
+
+        //Graphic gestion
+        while (true) {
             this.panel.repaint();
             try {
                 Thread.sleep(Math.max(0, 1000 / this.maxFPS - (System.currentTimeMillis() - lastFrame)));

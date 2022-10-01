@@ -21,9 +21,9 @@ public class ExampleListener extends UserListener {
     @Override
     public void onScroll(MouseWheelEvent e) {
         if (e.getPreciseWheelRotation() > 0) {
-            GraphicManager.getPanel().addZoom(.05d);
-        } else {
             GraphicManager.getPanel().addZoom(-.05d);
+        } else {
+            GraphicManager.getPanel().addZoom(.05d);
         }
     }
 
