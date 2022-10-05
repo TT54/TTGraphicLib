@@ -14,7 +14,7 @@ import java.net.URL;
 
 public class Main extends GraphicsListener {
 
-    private static final boolean TEST = false;
+    private static final boolean TEST = true;
 
     public static void main(String[] args) {
         if (TEST) {
@@ -62,6 +62,7 @@ public class Main extends GraphicsListener {
 
 
             PolygonNode polygonNode = new PolygonNode(panel, -100, 50, new double[]{-10d, 10d, 0}, new double[]{0, 0, 10});
+            polygonNode.setSpeedX(.1d);
 
             PolyNode polyNode = new PolyNode(panel, 10, 10, polygonNode, r);
             polyNode.setAccelerationX(0.1d);

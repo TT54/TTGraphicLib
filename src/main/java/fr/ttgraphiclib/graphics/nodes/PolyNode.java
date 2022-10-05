@@ -50,6 +50,8 @@ public class PolyNode extends GraphicNode {
     public void move() {
         super.move();
 
-        //TODO Voir pour faire bouger également les nodes internes
+        for(GraphicNode node : this.graphicNodes){
+            node.move();
+        }
     }
 }
