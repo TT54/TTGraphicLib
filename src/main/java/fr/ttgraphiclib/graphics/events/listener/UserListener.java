@@ -1,7 +1,12 @@
 package fr.ttgraphiclib.graphics.events.listener;
 
+import fr.ttgraphiclib.GraphicManager;
+import fr.ttgraphiclib.graphics.events.NodeClickedEvent;
+import fr.ttgraphiclib.graphics.nodes.GraphicNode;
+
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class UserListener implements MouseListener, MouseWheelListener, KeyListener {
@@ -24,6 +29,16 @@ public class UserListener implements MouseListener, MouseWheelListener, KeyListe
     public final void mousePressed(MouseEvent e) {
         for (UserListener listener : listeners)
             listener.onMousePressed(e);
+
+        for(GraphicNode node : GraphicManager.getPanel().getNodes()){
+            double[] coos = GraphicManager.getPanel().getCoordinatesFromGraphic(e.getX() - 9, e.getY() - 38);
+            if(node.isPointIn(coos[0], coos[1])){
+                NodeClickedEvent event = new NodeClickedEvent(GraphicManager.getFrame(), GraphicManager.getPanel(), node, e.getX(), e.getY());
+                node.onNodeClicked(event);
+                if(!event.isCanceled())
+                    GraphicsListener.nodeClickedEvent(event);
+            }
+        }
     }
 
     @Override

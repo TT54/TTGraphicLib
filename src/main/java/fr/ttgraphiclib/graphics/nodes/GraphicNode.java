@@ -1,8 +1,10 @@
 package fr.ttgraphiclib.graphics.nodes;
 
 import fr.ttgraphiclib.graphics.GraphicPanel;
+import fr.ttgraphiclib.graphics.events.NodeClickedEvent;
 import fr.ttgraphiclib.graphics.events.NodeMoveEvent;
 import fr.ttgraphiclib.graphics.events.listener.GraphicsListener;
+import fr.ttgraphiclib.graphics.interfaces.ClickAction;
 import fr.ttgraphiclib.graphics.interfaces.MoveAction;
 import fr.ttgraphiclib.utils.TTGraphics;
 
@@ -18,7 +20,8 @@ public abstract class GraphicNode {
     private double accelerationX;
     private double accelerationY;
 
-    private MoveAction<NodeMoveEvent> action;
+    private MoveAction<NodeMoveEvent> moveAction;
+    private ClickAction<NodeClickedEvent> clickAction;
 
 
     public GraphicNode(GraphicPanel panel, double x, double y) {
@@ -39,6 +42,8 @@ public abstract class GraphicNode {
     }
 
     public abstract void draw(TTGraphics g, int x, int y, int size);
+
+    public abstract boolean isPointIn(double x, double y);
 
     public final void setX(double x) {
         this.x = x;
@@ -84,8 +89,8 @@ public abstract class GraphicNode {
         double simY = this.y + this.speedY;
         NodeMoveEvent event = new NodeMoveEvent(simX, simY, this, this.panel);
 
-        if (this.action != null)
-            this.action.onMove(event);
+        if (this.moveAction != null)
+            this.moveAction.onMove(event);
         GraphicsListener.playNodeMoveEvent(event);
 
         if (!event.isCanceled()) {
@@ -94,6 +99,13 @@ public abstract class GraphicNode {
         } else {
             this.x += this.speedX;
             this.y += this.speedY;
+        }
+    }
+
+    public void onNodeClicked(NodeClickedEvent event){
+        if(this.clickAction != null) {
+            System.out.println("click");
+            this.clickAction.onMove(event);
         }
     }
 
@@ -134,6 +146,10 @@ public abstract class GraphicNode {
     }
 
     public void setMoveAction(MoveAction<NodeMoveEvent> action) {
-        this.action = action;
+        this.moveAction = action;
+    }
+
+    public void setClickAction(ClickAction<NodeClickedEvent> action){
+        this.clickAction = action;
     }
 }

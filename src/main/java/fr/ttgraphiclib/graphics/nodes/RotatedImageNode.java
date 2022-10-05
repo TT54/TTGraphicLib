@@ -39,6 +39,5 @@ public class RotatedImageNode extends ImageNode{
     @Override
     public void draw(TTGraphics g, int x, int y, int size) {
         g.drawRotatedImage(this.image, x, y, (int) this.width, (int) this.height, this.rotateAngle);
-
     }
 }

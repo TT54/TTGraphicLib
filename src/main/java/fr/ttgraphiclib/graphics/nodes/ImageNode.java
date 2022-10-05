@@ -70,4 +70,15 @@ public class ImageNode extends GraphicNode {
             g.drawImage(this.image, x, y, this.getPanel());
         }
     }
+
+    @Override
+    public boolean isPointIn(double x, double y) {
+        Rectangle rectangle;
+        if(this.width == 0 && this.height == 0){
+            rectangle = new Rectangle((int) this.getX(), (int) this.getY(), this.image.getWidth(), this.image.getHeight());
+        } else{
+            rectangle = new Rectangle((int) this.getX(), (int) this.getY(), (int) this.width, (int) this.height);
+        }
+        return rectangle.contains(x, y);
+    }
 }

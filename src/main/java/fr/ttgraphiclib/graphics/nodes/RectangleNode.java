@@ -2,8 +2,10 @@ package fr.ttgraphiclib.graphics.nodes;
 
 import fr.ttgraphiclib.graphics.GraphicPanel;
 import fr.ttgraphiclib.utils.TTGraphics;
+import org.w3c.dom.css.Rect;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 
 public class RectangleNode extends GraphicNode {
 
@@ -39,6 +41,12 @@ public class RectangleNode extends GraphicNode {
         g.setColor(color);
         g.fillRect(x, y, (int) (size * baseWidth), (int) (size * baseHeight));
         g.setColor(ancient);
+    }
+
+    @Override
+    public boolean isPointIn(double x, double y) {
+        Rectangle rectangle = new Rectangle((int) this.getX(), (int) this.getY(), (int) this.getBaseWidth(), (int) this.getBaseHeight());
+        return rectangle.contains(x, y);
     }
 
     public double getBaseWidth() {

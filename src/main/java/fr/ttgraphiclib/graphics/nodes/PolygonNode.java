@@ -3,6 +3,8 @@ package fr.ttgraphiclib.graphics.nodes;
 import fr.ttgraphiclib.graphics.GraphicPanel;
 import fr.ttgraphiclib.utils.TTGraphics;
 
+import java.awt.*;
+
 public class PolygonNode extends GraphicNode {
 
     private double[] polygonRelativeX;
@@ -37,6 +39,24 @@ public class PolygonNode extends GraphicNode {
         } else {
             throw new IllegalArgumentException();
         }
+    }
+
+    @Override
+    public boolean isPointIn(double x, double y) {
+        int[] xPoints = new int[this.polygonRelativeX.length];
+        int[] yPoints = new int[this.polygonRelativeY.length];
+        int length = xPoints.length;
+
+        if (length == yPoints.length) {
+            for (int i = 0; i < length; i++) {
+                xPoints[i] = (int) (this.getX() + this.polygonRelativeX[i]);
+                yPoints[i] = (int) (this.getY() + this.polygonRelativeY[i]);
+            }
+        } else {
+            throw new IllegalArgumentException();
+        }
+        Polygon polygon = new Polygon(xPoints, yPoints, this.polygonRelativeX.length);
+        return polygon.contains(x, y);
     }
 
     public double[] getPolygonRelativeX() {

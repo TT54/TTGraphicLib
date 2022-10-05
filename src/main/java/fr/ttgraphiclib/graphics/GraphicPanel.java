@@ -120,6 +120,18 @@ public class GraphicPanel extends JPanel {
             this.zoom += zoom;
     }
 
+    public double[] getCoordinatesFromGraphic(int x, int y){
+        int centerX = this.getWidth() / 2;
+        int centerY = this.getHeight() / 2;
+        return new double[] {((x - (double) centerX) / zoom) + topX, ((y - centerY) / zoom) + topY};
+    }
+
+    public int[] getGraphicFromCoordinates(double x, double y){
+        int centerX = this.getWidth() / 2;
+        int centerY = this.getHeight() / 2;
+        return new int[] {(int) (zoom * (x - topX)) + centerX, (int) (zoom * (y - topY)) + centerY};
+    }
+
 
     public static class DebugPanel extends GraphicPanel {
 

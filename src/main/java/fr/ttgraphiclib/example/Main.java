@@ -54,10 +54,14 @@ public class Main extends GraphicsListener {
             });
 
             RectangleNode r = new RectangleNode(panel, -50, -50, 100, 100);
-            r.setColor(Color.BLACK);
+            r.setColor(Color.GREEN);
+            r.setClickAction(event -> {
+                System.out.println("test");
+                event.getNode().accelerate(0, 0.01d);
+            });
 
 
-            PolygonNode polygonNode = new PolygonNode(panel, 100, 50, new double[]{-10d, 10d, 0}, new double[]{0, 0, 10});
+            PolygonNode polygonNode = new PolygonNode(panel, -100, 50, new double[]{-10d, 10d, 0}, new double[]{0, 0, 10});
 
             PolyNode polyNode = new PolyNode(panel, 10, 10, polygonNode, r);
             polyNode.setAccelerationX(0.1d);

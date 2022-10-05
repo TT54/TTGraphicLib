@@ -9,14 +9,6 @@ import java.awt.event.MouseWheelEvent;
 
 public class ExampleListener extends UserListener {
 
-    @Override
-    public void onMouseClicked(MouseEvent event) {
-        if (event.getButton() == 3) {
-            GraphicManager.getPanel().translatePanel(-5, 0);
-        } else {
-            GraphicManager.getPanel().translatePanel(5, 0);
-        }
-    }
 
     @Override
     public void onScroll(MouseWheelEvent e) {

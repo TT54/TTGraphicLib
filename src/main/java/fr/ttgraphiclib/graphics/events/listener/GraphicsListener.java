@@ -1,6 +1,7 @@
 package fr.ttgraphiclib.graphics.events.listener;
 
 import fr.ttgraphiclib.graphics.events.GraphicRepaintEvent;
+import fr.ttgraphiclib.graphics.events.NodeClickedEvent;
 import fr.ttgraphiclib.graphics.events.NodeMoveEvent;
 
 import java.util.ArrayList;
@@ -27,6 +28,14 @@ public abstract class GraphicsListener {
         }
     }
 
+    public static void nodeClickedEvent(NodeClickedEvent event){
+        for(GraphicsListener listener : listeners){
+            listener.onNodeClicked(event);
+        }
+    }
+
+
+    public void onNodeClicked(NodeClickedEvent event){}
 
     public void onPanelRepaint(GraphicRepaintEvent event) {
     }

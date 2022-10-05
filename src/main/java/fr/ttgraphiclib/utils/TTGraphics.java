@@ -87,7 +87,7 @@ public class TTGraphics {
 
     public void drawRotatedImage(BufferedImage image, int x, int y, int width, int height, double rotation){
         if(image != null) {
-            double rotationRequired = Math.toRadians(45);
+            double rotationRequired = Math.toRadians(rotation);
             double locationX = image.getWidth() / 2d;
             double locationY = image.getHeight() / 2d;
             AffineTransform tx = AffineTransform.getRotateInstance(rotationRequired, locationX, locationY);
