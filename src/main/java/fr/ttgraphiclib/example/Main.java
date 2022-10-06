@@ -14,7 +14,7 @@ import java.net.URL;
 
 public class Main extends GraphicsListener {
 
-    private static final boolean TEST = true;
+    private static final boolean TEST = false;
 
     public static void main(String[] args) {
         if (TEST) {

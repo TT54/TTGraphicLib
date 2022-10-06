@@ -35,6 +35,10 @@ public abstract class GraphicsListener {
     }
 
 
+    /**
+     * If you want this event is called when a node is clicked, you have to attach a ClickAction to the node
+     * @param event
+     */
     public void onNodeClicked(NodeClickedEvent event){}
 
     public void onPanelRepaint(GraphicRepaintEvent event) {

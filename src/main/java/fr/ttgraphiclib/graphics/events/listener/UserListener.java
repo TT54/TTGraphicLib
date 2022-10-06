@@ -13,6 +13,8 @@ public class UserListener implements MouseListener, MouseWheelListener, KeyListe
 
     private static List<UserListener> listeners = new ArrayList<>();
 
+    public static List<GraphicNode> nodeWithClickEvent = new ArrayList<>();
+
     public static void registerListener(UserListener listener) {
         if (!listeners.contains(listener))
             listeners.add(listener);
@@ -30,7 +32,7 @@ public class UserListener implements MouseListener, MouseWheelListener, KeyListe
         for (UserListener listener : listeners)
             listener.onMousePressed(e);
 
-        for(GraphicNode node : GraphicManager.getPanel().getNodes()){
+        for(GraphicNode node : nodeWithClickEvent){
             double[] coos = GraphicManager.getPanel().getCoordinatesFromGraphic(e.getX() - 9, e.getY() - 38);
             if(node.isPointIn(coos[0], coos[1])){
                 NodeClickedEvent event = new NodeClickedEvent(GraphicManager.getFrame(), GraphicManager.getPanel(), node, e.getX(), e.getY());

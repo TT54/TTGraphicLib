@@ -4,6 +4,7 @@ import fr.ttgraphiclib.graphics.GraphicPanel;
 import fr.ttgraphiclib.graphics.events.NodeClickedEvent;
 import fr.ttgraphiclib.graphics.events.NodeMoveEvent;
 import fr.ttgraphiclib.graphics.events.listener.GraphicsListener;
+import fr.ttgraphiclib.graphics.events.listener.UserListener;
 import fr.ttgraphiclib.graphics.interfaces.ClickAction;
 import fr.ttgraphiclib.graphics.interfaces.MoveAction;
 import fr.ttgraphiclib.utils.TTGraphics;
@@ -104,8 +105,7 @@ public abstract class GraphicNode {
 
     public void onNodeClicked(NodeClickedEvent event){
         if(this.clickAction != null) {
-            System.out.println("click");
-            this.clickAction.onMove(event);
+            this.clickAction.onClick(event);
         }
     }
 
@@ -151,5 +151,7 @@ public abstract class GraphicNode {
 
     public void setClickAction(ClickAction<NodeClickedEvent> action){
         this.clickAction = action;
+        if(!UserListener.nodeWithClickEvent.contains(this))
+            UserListener.nodeWithClickEvent.add(this);
     }
 }
