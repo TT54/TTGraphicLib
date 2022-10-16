@@ -26,6 +26,7 @@ public class Frame extends JFrame {
 
     private long lastFrame = 0;
     private long lastTick = 0;
+    private MainClass mainClass;
 
     public Frame(String title, int width, int height, boolean resizable) throws HeadlessException {
         this.title = title;
@@ -99,6 +100,9 @@ public class Frame extends JFrame {
         new Thread(() -> {
             while (true) {
                 if (!this.freeze) {
+                    if (this.mainClass != null)
+                        this.mainClass.doTickContent(this);
+
                     panel.getNodes().forEach(GraphicNode::move);
                 }
                 try {
@@ -125,6 +129,10 @@ public class Frame extends JFrame {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void setMainClass(MainClass mainClass) {
+        this.mainClass = mainClass;
     }
 
     public void setNodesEnabled(boolean freeze) {
