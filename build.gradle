@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'fr.ttgraphiclib'
-version '1.4.2-ALPHA'
+version '1.4.3-ALPHA'
 
 repositories {
     mavenCentral()

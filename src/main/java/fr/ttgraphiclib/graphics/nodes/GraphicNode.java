@@ -12,17 +12,17 @@ import fr.ttgraphiclib.utils.TTGraphics;
 public abstract class GraphicNode {
 
 
-    private GraphicPanel panel;
-    private double x;
-    private double y;
-    private double size = 1;
-    private double speedX;
-    private double speedY;
-    private double accelerationX;
-    private double accelerationY;
+    protected GraphicPanel panel;
+    protected double x;
+    protected double y;
+    protected double size = 1;
+    protected double speedX;
+    protected double speedY;
+    protected double accelerationX;
+    protected double accelerationY;
 
-    private MoveAction<NodeMoveEvent> moveAction;
-    private ClickAction<NodeClickedEvent> clickAction;
+    protected MoveAction<NodeMoveEvent> moveAction;
+    protected ClickAction<NodeClickedEvent> clickAction;
 
 
     public GraphicNode(GraphicPanel panel, double x, double y) {
@@ -80,28 +80,6 @@ public abstract class GraphicNode {
         this.speedY += speedY;
     }
 
-
-    public void move() {
-        this.speedX += this.accelerationX;
-        this.speedY += this.accelerationY;
-
-
-        double simX = this.x + this.speedX;
-        double simY = this.y + this.speedY;
-        NodeMoveEvent event = new NodeMoveEvent(simX, simY, this, this.panel);
-
-        if (this.moveAction != null)
-            this.moveAction.onMove(event);
-        GraphicsListener.playNodeMoveEvent(event);
-
-        if (!event.isCanceled()) {
-            this.x = event.getNextPosX();
-            this.y = event.getNextPosY();
-        } else {
-            this.x += this.speedX;
-            this.y += this.speedY;
-        }
-    }
 
     public void onNodeClicked(NodeClickedEvent event){
         if(this.clickAction != null) {

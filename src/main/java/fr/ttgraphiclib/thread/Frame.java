@@ -2,10 +2,14 @@ package fr.ttgraphiclib.thread;
 
 import fr.ttgraphiclib.graphics.GraphicPanel;
 import fr.ttgraphiclib.graphics.events.listener.UserListener;
+import fr.ttgraphiclib.graphics.interfaces.Movable;
 import fr.ttgraphiclib.graphics.nodes.GraphicNode;
+import fr.ttgraphiclib.graphics.nodes.MovableNode;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 
 public class Frame extends JFrame {
 
@@ -99,18 +103,25 @@ public class Frame extends JFrame {
         //Calcul gestion
         new Thread(() -> {
             while (true) {
-                if (!this.freeze) {
-                    if (this.mainClass != null)
-                        this.mainClass.doTickContent(this);
-
-                    panel.getNodes().forEach(GraphicNode::move);
-                }
                 try {
-                    Thread.sleep(Math.max(0, 1000 / this.maxMps - (System.currentTimeMillis() - lastTick)));
-                    tps += (int) (1000 / (System.currentTimeMillis() - lastTick + 1));
-                    tps /= 2;
-                    lastTick = System.currentTimeMillis();
-                } catch (InterruptedException e) {
+                    if (!this.freeze) {
+                        if (this.mainClass != null)
+                            this.mainClass.doTickContent(this);
+
+                        new ArrayList<>(panel.getNodes()).forEach(node -> {
+                            if (node instanceof Movable)
+                                ((Movable) node).move();
+                        });
+                    }
+                    try {
+                        Thread.sleep(Math.max(0, 1000 / this.maxMps - (System.currentTimeMillis() - lastTick)));
+                        tps += (int) (1000 / (System.currentTimeMillis() - lastTick + 1));
+                        tps /= 2;
+                        lastTick = System.currentTimeMillis();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } catch (ConcurrentModificationException e){
                     e.printStackTrace();
                 }
             }

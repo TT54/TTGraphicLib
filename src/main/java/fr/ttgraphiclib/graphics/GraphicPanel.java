@@ -63,12 +63,14 @@ public class GraphicPanel extends JPanel {
     }
 
     private void drawNodes(TTGraphics g) {
+        final List<GraphicNode> nodes = new ArrayList<>(this.nodes);
         try {
-            for (GraphicNode node : this.nodes) {
-                node.draw(g, (int) node.getX(), (int) node.getY(), (int) node.getSize());
+            for (GraphicNode node : nodes) {
+                if(node != null)
+                    node.draw(g, (int) node.getX(), (int) node.getY(), (int) node.getSize());
             }
         } catch (ConcurrentModificationException e){
-            System.out.println("Concurrent Modification Exception");
+            e.printStackTrace();
         }
     }
 

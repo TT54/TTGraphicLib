@@ -3,9 +3,10 @@ package fr.ttgraphiclib.graphics.nodes;
 import fr.ttgraphiclib.GraphicManager;
 import fr.ttgraphiclib.graphics.GraphicPanel;
 import fr.ttgraphiclib.graphics.events.NodeClickedEvent;
+import fr.ttgraphiclib.graphics.interfaces.Movable;
 import fr.ttgraphiclib.utils.TTGraphics;
 
-public class PolyNode extends GraphicNode {
+public class PolyNode extends MovableNode {
 
     private final GraphicNode[] graphicNodes;
 
@@ -51,7 +52,8 @@ public class PolyNode extends GraphicNode {
         super.move();
 
         for(GraphicNode node : this.graphicNodes){
-            node.move();
+            if(node instanceof Movable)
+                ((Movable) node).move();
         }
     }
 }
