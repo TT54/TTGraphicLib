@@ -42,6 +42,14 @@ public class ImageNode extends GraphicNode {
         }
     }
 
+    public ImageNode(GraphicPanel panel, double x, double y, double width, double height, BufferedImage image) {
+        super(panel, x, y);
+
+        this.width = width;
+        this.height = height;
+        this.image = image;
+    }
+
     public ImageNode(GraphicPanel panel, double x, double y, URL imageURL) {
         super(panel, x, y);
 
@@ -60,6 +68,12 @@ public class ImageNode extends GraphicNode {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public ImageNode(GraphicPanel panel, double x, double y, BufferedImage image) {
+        super(panel, x, y);
+
+        this.image = image;
     }
 
     @Override
