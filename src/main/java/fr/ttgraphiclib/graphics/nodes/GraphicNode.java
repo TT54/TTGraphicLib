@@ -2,8 +2,8 @@ package fr.ttgraphiclib.graphics.nodes;
 
 import fr.ttgraphiclib.graphics.GraphicPanel;
 import fr.ttgraphiclib.graphics.events.NodeClickedEvent;
+import fr.ttgraphiclib.graphics.events.NodeMouseReleasedEvent;
 import fr.ttgraphiclib.graphics.events.NodeMoveEvent;
-import fr.ttgraphiclib.graphics.events.listener.GraphicsListener;
 import fr.ttgraphiclib.graphics.events.listener.UserListener;
 import fr.ttgraphiclib.graphics.interfaces.ClickAction;
 import fr.ttgraphiclib.graphics.interfaces.MoveAction;
@@ -23,6 +23,7 @@ public abstract class GraphicNode {
 
     protected MoveAction<NodeMoveEvent> moveAction;
     protected ClickAction<NodeClickedEvent> clickAction;
+    protected ClickAction<NodeMouseReleasedEvent> mouseReleasedAction;
 
 
     public GraphicNode(GraphicPanel panel, double x, double y) {
@@ -40,6 +41,10 @@ public abstract class GraphicNode {
         this.panel = panel;
 
         this.panel.addNode(this);
+    }
+
+    public int getPriority() {
+        return -1;
     }
 
     public abstract void draw(TTGraphics g, int x, int y, int size);
@@ -127,9 +132,21 @@ public abstract class GraphicNode {
         this.moveAction = action;
     }
 
-    public void setClickAction(ClickAction<NodeClickedEvent> action){
+    public void setClickAction(ClickAction<NodeClickedEvent> action) {
         this.clickAction = action;
-        if(!UserListener.nodeWithClickEvent.contains(this))
+        if (!UserListener.nodeWithClickEvent.contains(this))
             UserListener.nodeWithClickEvent.add(this);
+    }
+
+    public void setMouseReleasedAction(ClickAction<NodeMouseReleasedEvent> action) {
+        this.mouseReleasedAction = action;
+        if (!UserListener.nodeWithClickEvent.contains(this))
+            UserListener.nodeWithClickEvent.add(this);
+    }
+
+    public void onNodeMouseReleased(NodeMouseReleasedEvent event) {
+        if (this.mouseReleasedAction != null) {
+            this.mouseReleasedAction.onClick(event);
+        }
     }
 }

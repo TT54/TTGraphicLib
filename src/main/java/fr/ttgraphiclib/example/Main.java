@@ -75,10 +75,13 @@ public class Main extends GraphicsListener {
             });
 
             try {
-                new ImageNode(panel, 25, 250, 50, 50, new URL("https://static.wikia.nocookie.net/hypixel-skyblock/images/e/e6/Site-logo.png/revision/latest?cb=20220430221340"));
-                RotatedImageNode img = new RotatedImageNode(panel, 0, -250, 50, 50, new URL("https://static.wikia.nocookie.net/hypixel-skyblock/images/e/e6/Site-logo.png/revision/latest?cb=20220430221340"), 1d);
+                ImageNode n = new ImageNode(panel, 25, 250, 50, 50, new URL("https://static.wikia.nocookie.net/hypixel-skyblock/images/e/e6/Site-logo.png/revision/latest?cb=20220430221340"));
+                RotatedImageNode img = new RotatedImageNode(panel, 0, -250, 50, 50, new URL("https://static.wikia.nocookie.net/hypixel-skyblock/images/e/e6/Site-logo.png/revision/latest?cb=20220430221340"), 50d);
                 img.setMoveAction(event -> {
                     img.accelerate(0.01, 0.01);
+                });
+                n.setMoveAction(event -> {
+                    System.out.println("ok");
                 });
             } catch (MalformedURLException e) {
                 e.printStackTrace();

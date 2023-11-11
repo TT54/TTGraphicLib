@@ -2,16 +2,16 @@ package fr.ttgraphiclib.graphics.events.listener;
 
 import fr.ttgraphiclib.GraphicManager;
 import fr.ttgraphiclib.graphics.events.NodeClickedEvent;
+import fr.ttgraphiclib.graphics.events.NodeMouseReleasedEvent;
 import fr.ttgraphiclib.graphics.nodes.GraphicNode;
 
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class UserListener implements MouseListener, MouseWheelListener, KeyListener {
 
-    private static List<UserListener> listeners = new ArrayList<>();
+    private final static List<UserListener> listeners = new ArrayList<>();
 
     public static List<GraphicNode> nodeWithClickEvent = new ArrayList<>();
 
@@ -23,7 +23,7 @@ public class UserListener implements MouseListener, MouseWheelListener, KeyListe
 
     @Override
     public final void mouseClicked(MouseEvent e) {
-        for (UserListener listener : listeners)
+        for (UserListener listener : new ArrayList<>(listeners))
             listener.onMouseClicked(e);
     }
 
@@ -32,12 +32,12 @@ public class UserListener implements MouseListener, MouseWheelListener, KeyListe
         for (UserListener listener : listeners)
             listener.onMousePressed(e);
 
-        for(GraphicNode node : nodeWithClickEvent){
+        for (GraphicNode node : new ArrayList<>(nodeWithClickEvent)) {
             double[] coos = GraphicManager.getPanel().getCoordinatesFromGraphic(e.getX() - 9, e.getY() - 38);
-            if(node.isPointIn(coos[0], coos[1])){
+            if (node.isPointIn(coos[0], coos[1])) {
                 NodeClickedEvent event = new NodeClickedEvent(GraphicManager.getFrame(), GraphicManager.getPanel(), node, e.getX(), e.getY());
                 node.onNodeClicked(event);
-                if(!event.isCanceled())
+                if (!event.isCanceled())
                     GraphicsListener.nodeClickedEvent(event);
             }
         }
@@ -47,30 +47,40 @@ public class UserListener implements MouseListener, MouseWheelListener, KeyListe
     public final void mouseReleased(MouseEvent e) {
         for (UserListener listener : listeners)
             listener.onMouseReleased(e);
+
+        for (GraphicNode node : new ArrayList<>(nodeWithClickEvent)) {
+            double[] coos = GraphicManager.getPanel().getCoordinatesFromGraphic(e.getX() - 9, e.getY() - 38);
+            if (node.isPointIn(coos[0], coos[1])) {
+                NodeMouseReleasedEvent event = new NodeMouseReleasedEvent(GraphicManager.getFrame(), GraphicManager.getPanel(), node, e.getX(), e.getY());
+                node.onNodeMouseReleased(event);
+                if (!event.isCanceled())
+                    GraphicsListener.nodeMouseReleasedEvent(event);
+            }
+        }
     }
 
     @Override
     public final void mouseEntered(MouseEvent e) {
-        for (UserListener listener : listeners)
+        for (UserListener listener : new ArrayList<>(listeners))
             listener.onMouseEnteredWindow(e);
     }
 
     @Override
     public final void mouseExited(MouseEvent e) {
-        for (UserListener listener : listeners)
+        for (UserListener listener : new ArrayList<>(listeners))
             listener.onMouseExitedWindow(e);
     }
 
     @Override
     public final void mouseWheelMoved(MouseWheelEvent e) {
-        for (UserListener listener : listeners) {
+        for (UserListener listener : new ArrayList<>(listeners)) {
             listener.onScroll(e);
         }
     }
 
     @Override
     public final void keyTyped(KeyEvent e) {
-        for (UserListener listener : listeners) {
+        for (UserListener listener : new ArrayList<>(listeners)) {
             listener.onKeyTyped(e);
         }
     }
@@ -78,14 +88,14 @@ public class UserListener implements MouseListener, MouseWheelListener, KeyListe
 
     @Override
     public final void keyPressed(KeyEvent e) {
-        for (UserListener listener : listeners) {
+        for (UserListener listener : new ArrayList<>(listeners)) {
             listener.onKeyPressed(e);
         }
     }
 
     @Override
     public final void keyReleased(KeyEvent e) {
-        for (UserListener listener : listeners) {
+        for (UserListener listener : new ArrayList<>(listeners)) {
             listener.onKeyReleased(e);
         }
     }
